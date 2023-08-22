@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+  <head>
+    <title>Cross-Browser QRCode generator for Javascript</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,user-scalable=no"
+    />
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <!-- <script type="text/javascript" src="qrcode.js"></script> -->
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+  </head>
+  <body>
+    <div id="qrContainer" style="width: 400px; height: 400px"></div>
+    <script type="text/javascript">
+      var container = document.getElementById('qrContainer');
+
+      function renderCircularQRCode(qrData, smallerQRData) {
+        var sideLength = 200;
+        var smallerQRRadius = 40;
+        var halfSide = sideLength / 2;
+        var qrCircleRadius = sideLength / 2 + smallerQRRadius;
+
+        // Render the primary QR code to the canvas
+        new QRCode(container, {
+          text: qrData,
+          width: sideLength,
+          height: sideLength,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.L,
+        });
+
+        // Top
+        //renderSmallerQR(smallerQRData, halfSide, -smallerQRRadius);
+        // Right
+        //renderSmallerQR(smallerQRData, sideLength, halfSide);
+        // Bottom
+        //renderSmallerQR(smallerQRData, halfSide, sideLength);
+        // Left
+        //renderSmallerQR(smallerQRData, -smallerQRRadius, halfSide);
+
+        // Draw a circle around everything
+        //drawCircle(halfSide, halfSide, qrCircleRadius, "#000");
+      }
+
+      function renderSmallerQR(data, x, y) {
+        var tempCanvas = document.getElementById('qrContainer');
+        var smallerSideLength =200;
+
+        new QRCode(tempCanvas, {
+          text: data,
+          width: smallerSideLength,
+          height: smallerSideLength,
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.L,
+        });
+
+        ctx.drawImage(
+          tempCanvas,
+          x - smallerSideLength / 2,
+          y - smallerSideLength / 2
+        );
+      }
+
+      function drawCircle(x, y, radius, color) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      }
+
+      // Example usage:
+      renderCircularQRCode(
+        "https://www.example.com",
+        "https://www.small-qr.com"
+      );
+
+      // $("#text").
+      // 	on("blur", function () {
+      // 		makeCode();
+      // 	}).
+      // 	on("keydown", function (e) {
+      // 		if (e.keyCode == 13) {
+      // 			makeCode();
+      // 		}
+      // 	});
+    </script>
+  </body>
+</html>
